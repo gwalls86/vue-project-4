@@ -4,6 +4,7 @@ import {ref,computed} from 'vue';
 import { auth } from '../firebaseConfig';
 //import {useRouter} from 'vue-router';
 import router from '../router';
+import { useDatabaseStore } from './database';
 
 //const useRouter = useRouter();
 
@@ -56,16 +57,21 @@ export const useUserStore = defineStore('userStore', () => {
 
     const logoutUser = (async () => {
        // loadingUser.value = true;
-        try {
+        
+        try {            
             await signOut(auth);
             userData.value = null;
-            router.push('/login');
+            router.push('/login');       
+            const databaseStore = useDatabaseStore();
+            databaseStore.$reset();      
+            
         } catch (error) {
             console.log(error);
         }finally{
-           // loadingUser.value =false;
+           
         }
-    });
+    }
+    );
 
     const currentUser = ( () => {
         //Crear una promesa para manejar el usuario conectado
